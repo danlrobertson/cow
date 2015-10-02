@@ -1,0 +1,2 @@
+install(DIRECTORY "inc/" DESTINATION ${MAIN_INC_DIR})
+install(FILES config.h DESTINATION ${MAIN_INC_DIR}/core)

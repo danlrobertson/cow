@@ -1,0 +1,2 @@
+#define __cow_version_major__ @COW_VERSION_MAJOR@
+#define __cow_version_minor__ @COW_VERSION_MINOR@
