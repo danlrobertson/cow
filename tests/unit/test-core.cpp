@@ -53,9 +53,9 @@ void TestCowBase::setUp() {
 }
 
 void TestCowBase::testCowBaseVal() {
-  cow::core::cow_base< int > tmp1( 5 );
-  cow::core::cow_base< int > tmp2( tmp1 );
-  cow::core::cow_base< int > tmp3( tmp1 );
+  cow::core::cow_ptr< int > tmp1( 5 );
+  cow::core::cow_ptr< int > tmp2( tmp1 );
+  cow::core::cow_ptr< int > tmp3( tmp1 );
   CPPUNIT_ASSERT_MESSAGE( "tmp1.use_count() == 3",
                           tmp1.use_count() == 3 );
   CPPUNIT_ASSERT_MESSAGE( "tmp2.use_count() == 3",
@@ -92,10 +92,10 @@ void TestCowBase::testCowBasePtr() {
   B b1;
   C c1;
   C c2;
-  cow::core::cow_base< A > tmp1 ( b1 );
-  cow::core::cow_base< A > tmp2 ( c1 );
-  cow::core::cow_base< A > tmp3 ( tmp1 );
-  cow::core::cow_base< A > tmp4 ( tmp2 );
+  cow::core::cow_ptr< A > tmp1 ( b1 );
+  cow::core::cow_ptr< A > tmp2 ( c1 );
+  cow::core::cow_ptr< A > tmp3 ( tmp1 );
+  cow::core::cow_ptr< A > tmp4 ( tmp2 );
 
   CPPUNIT_ASSERT_MESSAGE( "tmp1 == tmp3",
                           tmp1 == tmp3 );
@@ -106,7 +106,7 @@ void TestCowBase::testCowBasePtr() {
   CPPUNIT_ASSERT_MESSAGE( "tmp2 != tmp4",
                           tmp2 != tmp3 );
 
-  tmp3 = cow::core::cow_base< A >( c2 );
+  tmp3 = cow::core::cow_ptr< A >( c2 );
 
   CPPUNIT_ASSERT_MESSAGE( "!tmp1.same_instance( tmp3 )",
                           !tmp1.same_instance( tmp3 ) );
@@ -120,17 +120,17 @@ void TestCowBase::testCowBasePtr() {
 }
 
 void TestCowBase::testCowBaseArr() {
-  cow::core::cow_base< int[] > tmp1( 255 );
+  cow::core::cow_ptr< int[] > tmp1( 255 );
   int* x = tmp1.get();
   for( int i = 0; i < 255; ++i ) {
     x[i] = i;
   }
-  cow::core::cow_base< int[] > tmp2( tmp1 );
+  cow::core::cow_ptr< int[] > tmp2( tmp1 );
 
   CPPUNIT_ASSERT_MESSAGE( "tmp1 == tmp2",
                           tmp1 == tmp2 );
 
-  cow::core::cow_base< int[] > tmp3;
+  cow::core::cow_ptr< int[] > tmp3;
 
   x = tmp2.get();
   for( int i = 0; i < 3; ++i ) {
@@ -143,8 +143,8 @@ void TestCowBase::testCowBaseArr() {
   CPPUNIT_ASSERT_MESSAGE( "tmp2 == tmp3",
                           tmp2 == tmp3 );
 
-  tmp3 = cow::core::cow_base< int[] >();
-  cow::core::cow_base< int[] > tmp4( 5 );
+  tmp3 = cow::core::cow_ptr< int[] >();
+  cow::core::cow_ptr< int[] > tmp4( 5 );
   tmp3 = std::move( tmp4 );
 
   CPPUNIT_ASSERT_MESSAGE( "tmp1.use_count() == 1",
