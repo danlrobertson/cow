@@ -11,25 +11,40 @@ namespace core {
 
 template < bool... Args >
 struct And {
-  static const bool value = true;
+  typedef std::true_type type;
+  static const bool value = type::value;
 };
 
 template < bool T, bool... Args >
 struct And< T, Args... > {
-  static const bool value = ::std::conditional< T,
-               And< Args... >, ::std::false_type >::type::value;
+  typedef typename ::std::conditional< T,
+          And< Args... >, ::std::false_type >::type type;
+  static const bool value = type::value;
 };
 
 template < bool... Args >
 struct Or {
-  static const bool value = false;
+  typedef std::false_type type;
+  static const bool value = type::value;
 };
 
 template < bool T, bool... Args >
 struct Or< T, Args... > {
-  static const bool value = ::std::conditional< T,
-               ::std::true_type, Or< Args... > >::type::value;
+  typedef typename ::std::conditional< T,
+               ::std::true_type, Or< Args... > >::type type;
+  static const bool value = type::value;
+};
 
+template < typename T >
+struct has_clone {
+private:
+  template< typename U, U > struct signature_check { };
+  struct flag { char one; char two; };
+  template < typename U > static flag test(...);
+  template < typename U > static char test( signature_check< T*(T::*)(), &U::clone >* = 0 );
+public:
+  static const bool value = sizeof( test< T >(0) ) == 1;
+  typedef T type;
 };
 
 } // namespace core

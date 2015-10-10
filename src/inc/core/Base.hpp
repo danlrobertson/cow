@@ -21,19 +21,19 @@ struct BasicRC {
 };
 
 template < typename T, typename P >
-struct _cow_ptr_type_check {
+struct cow_ptr_type_check {
   typedef typename ::std::conditional< ::std::is_array< T >::value,
-      _cow_ptr_arr< typename ::std::remove_extent< T >::type, P >,
+      cow_ptr_arr< typename ::std::remove_extent< T >::type, P >,
       typename ::std::conditional< ::std::is_abstract< T >::value,
-                                   _cow_ptr_ptr< T, P >, _cow_ptr_val< T, P >
+                                   cow_ptr_ptr< T, P >, cow_ptr_val< T, P >
                                   >::type >::type type;
 };
 
 template < typename T, typename P = BasicRC >
 class cow_ptr {
 public:
-  typedef typename _cow_ptr_type_check< T, P >::type  impl_t;
-  typedef typename impl_t::value_type                 value_type;
+  typedef typename cow_ptr_type_check< T, P >::type  impl_t;
+  typedef typename impl_t::value_type                value_type;
 
 private:
   impl_t* m_pimpl;
