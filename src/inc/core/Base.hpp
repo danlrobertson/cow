@@ -67,6 +67,8 @@ public:
 
   bool same_instance( const cow_ptr& ) const;
 
+  void swap( cow_ptr& );
+
   bool operator==( const cow_ptr& ) const;
 
   bool operator!=( const cow_ptr& ) const;
@@ -108,6 +110,13 @@ cow_ptr< T, P >& cow_ptr< T, P >::operator=( cow_ptr&& src ) {
 template < typename T, typename P >
 bool cow_ptr< T, P >::same_instance( const cow_ptr& rhs ) const {
   return m_pimpl && m_pimpl == rhs.m_pimpl;
+}
+
+template < typename T, typename P >
+void cow_ptr< T, P >::swap( cow_ptr& other ) {
+  m_pimpl ^= other.m_pimpl;
+  other.m_pimpl ^= m_pimpl;
+  m_pimpl ^= other.m_pimpl;
 }
 
 template < typename T, typename P >
