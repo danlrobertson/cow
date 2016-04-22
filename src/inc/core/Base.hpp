@@ -22,9 +22,13 @@ struct BasicRC {
 
 template < typename T, typename P >
 struct cow_ptr_type_check {
+  // Chooses the correct implementation based on the type of the class to
+  // be wrapped and in the case that `T` is an abstract class `T::clone`
+  // is implemented
   typedef typename ::std::conditional< ::std::is_array< T >::value,
       cow_ptr_arr< typename ::std::remove_extent< T >::type, P >,
-      typename ::std::conditional< ::std::is_abstract< T >::value,
+      typename ::std::conditional< And< ::std::is_abstract< T >::value,
+                                        has_clone< T >::value >::value,
                                    cow_ptr_ptr< T, P >, cow_ptr_val< T, P >
                                   >::type >::type type;
 };

@@ -35,14 +35,18 @@ struct C : public A {
   virtual A* clone() const { return new C; }
 };
 
+struct D {};
+
 class TestCowBase : public CppUnit::TestFixture {
 public:
   void setUp();
+  void testHelpers();
   void testCowBaseVal();
   void testCowBasePtr();
   void testCowBaseArr();
 
   CPPUNIT_TEST_SUITE(TestCowBase);
+  CPPUNIT_TEST(testHelpers);
   CPPUNIT_TEST(testCowBaseVal);
   CPPUNIT_TEST(testCowBasePtr);
   CPPUNIT_TEST(testCowBaseArr);
@@ -50,6 +54,27 @@ public:
 };
 
 void TestCowBase::setUp() {
+}
+
+
+void TestCowBase::testHelpers() {
+  CPPUNIT_ASSERT_MESSAGE( "A has clone",
+                          cow::core::has_clone< A >::value );
+
+  CPPUNIT_ASSERT_MESSAGE( "!(D has clone)",
+                          !cow::core::has_clone< D >::value );
+
+  bool d_or_a = cow::core::Or< cow::core::has_clone< D >::value,
+                               cow::core::has_clone< A >::value
+                              >::value;
+
+  CPPUNIT_ASSERT_MESSAGE( "D has clone || A has clone", d_or_a );
+
+  bool not_a_and_d = !cow::core::And< cow::core::has_clone< A >::value,
+                                      cow::core::has_clone< D >::value
+                                     >::value;
+
+  CPPUNIT_ASSERT_MESSAGE( "!(A has clone && D has clone)", not_a_and_d );
 }
 
 void TestCowBase::testCowBaseVal() {

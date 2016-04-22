@@ -35,17 +35,22 @@ struct Or< T, Args... > {
   static const bool value = type::value;
 };
 
-template < typename T >
-struct has_clone {
-private:
-  template< typename U, U > struct signature_check { };
-  struct flag { char one; char two; };
-  template < typename U > static flag test(...);
-  template < typename U > static char test( signature_check< T*(T::*)(), &U::clone >* = 0 );
-public:
-  static const bool value = sizeof( test< T >(0) ) == 1;
-  typedef T type;
-};
+
+namespace helpers {
+  template < typename T >
+  struct true_if_clone {
+      static const bool value = true;
+  };
+
+  template< typename T >
+  static true_if_clone<decltype(std::declval<T>().clone())> test_has_clone(int);
+
+  template< typename T >
+  static ::std::false_type test_has_clone(long);
+}
+
+template<class T>
+struct has_clone : decltype(helpers::test_has_clone<T>(0)){};
 
 } // namespace core
 } // namespace cow
